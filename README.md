@@ -1,7 +1,5 @@
 # python_practice
 
-Python Practice Problems
-
 A personal repository for practicing my python skills. Includes problem and solution with explanations
 
 Source: "Elements of Programming Interviews in Python" by Aziz, et al \
