@@ -1,42 +1,97 @@
-# Page 116 of EOPI
-# Binary Trees bootcamp
+'''
+https://www.tutorialspoint.com/python_data_structure/python_binary_tree.htm
 
-def tree_traversal(root: BinaryTreeNode):
-    if root:
-        # Preorder: Processes the root before the traversals fo left and right children
-        print('PreorderL %d' % root.data)
-        tree_traversal(root.left)
-        # Inorder: Processes the root after the traversal of left child and before
-        # traversal of right child
-        print('Inorder: %d' % root.data)
-        tree_traversal(root.right)
-        # Postorder: Process the root after the traversals of left and right
-        # children
-        print('Postorder: %d' % root.data)
+A. Tree represents the nodes connected by its edges
+    1. Non-linear data structure
+    2. One node is marked as Root node
+    3. Every node other than the root is associated with one parent node
+    4. Each node can have arbitrary number of child
+'''
 
-# 9.1, Page 116 - Test if a tree is height-balanced
-import collections
+# Designate one node as the root node and then add more nodes as child nodes
+class Node:
 
-def is_balanced_binary_tree(tree = BinaryTreeNode):
-    BalancedStatusWithHeight = collections.namedtuple(
-        'BalancedStatusWithHeight', ('balanced', 'height'))
+    def __init__(self, data):
 
-    # First value of the return value indicated if treeis balanced, and if
-    # balanced the second value of the return value is the height of the tree
-    def check_balanced(tree):
-        if not tree:
-            return BalancedStatusWithHeight(balanced=True, height=-1)
+        self.left = None
+        self.right = None
+        self.data = data
 
-        left_result = check_balanced(tree.left)
-        if not left_result.balanced:
-            return left_result
+    def insert(self, data):
+        '''
+        Insert leaves into a tree. 
+        Compares new value of the node to the parent node and decides to ass it as a
+        left node or a right node
+        '''
+        if self.data:
+            if data < self.data:
+                if self.left is None:
+                    self.left = Node(data)
+                else:
+                    self.left.insert(data)
+            elif data > self.data:
+                if self.right is None:
+                    self.right = Node(data)
+                else:
+                    self.right.insert(data)
+        else:
+            self.data = data
 
-        right_result = check_balanced(tree.right)
-        if not right_result.balanced:
-            return right_result
+    def printTree(self):
+        '''
+        Prints the tree
+        '''
+        if self.left:
+            self.left.printTree()
+        print(self.data),
+        if self.right:
+            self.right.printTree()
 
-        is_balanced = abs(left_result.height - right_result.height) <= 1
-        height = max(left_result.height, right_result.height) + 1
-        return BalancedStatusWithHeight(is_balanced, height)
+# Traversal is the process of visiting all the nodes of a tree and may print values
+# Because all nodes are connected via edges (links) we always start from the root
+# Cannot access a a random node in a tree
 
-    return check_balanced(tree).balanced 
+    def inorderTraversal(self, root):
+        '''
+        First, visit left subtree, then the root, then later the right subtree
+        Left -> Root -> Right
+        '''
+        res = []
+        if root:
+            res = self.inorderTraversal(root.left)
+            res.append(root.data)
+            res = res + self.inorderTraversal(root.right)
+        return res
+
+    def PreorderTraversal(self, root):
+        '''
+        Root -> Left ->Right
+        '''
+        res = []
+        if root:
+            res.append(root.data)
+            res = res + self.PreorderTraversal(root.left)
+            res = res + self.PreorderTraversal(root.right)
+        return res
+
+    def PostorderTraversal(self, root):
+        '''
+        Left ->Right -> Root
+        '''
+        res = []
+        if root:
+            res = self.PostorderTraversal(root.left)
+            res = res + self.PostorderTraversal(root.right)
+            res.append(root.data)
+        return res
+
+root = Node(27)
+root.insert(14)
+root.insert(35)
+root.insert(10)
+root.insert(19)
+root.insert(31)
+root.insert(42)
+print(root.inorderTraversal(root))
+print(root.PreorderTraversal(root))
+print(root.PostorderTraversal(root))
